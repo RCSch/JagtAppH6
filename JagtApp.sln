@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp", "JagtApp\JagtApp.csproj", "{9744A312-6521-438E-A79A-A0460A109740}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp.Client", "JagtApp.Client\JagtApp.Client.csproj", "{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9744A312-6521-438E-A79A-A0460A109740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9744A312-6521-438E-A79A-A0460A109740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9744A312-6521-438E-A79A-A0460A109740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9744A312-6521-438E-A79A-A0460A109740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {89B7C569-E8A3-4440-8EAB-48442FCBB2C9}
+	EndGlobalSection
+EndGlobal
