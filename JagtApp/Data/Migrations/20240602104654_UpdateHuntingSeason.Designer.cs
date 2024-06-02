@@ -4,6 +4,7 @@ using JagtApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JagtApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240602104654_UpdateHuntingSeason")]
+    partial class UpdateHuntingSeason
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,27 +88,6 @@ namespace JagtApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("JagtApp.Models.AllowedFirearmType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FirearmType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameRequirementId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GameRequirementId");
-
-                    b.ToTable("AllowedFirearmTypes");
                 });
 
             modelBuilder.Entity("JagtApp.Models.AmmunitionRequirements", b =>
@@ -372,7 +354,7 @@ namespace JagtApp.Migrations
                     b.Property<int>("EndMonth")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameAnimalId")
+                    b.Property<int?>("GameAnimalId")
                         .HasColumnType("int");
 
                     b.Property<int>("StartDay")
@@ -386,33 +368,6 @@ namespace JagtApp.Migrations
                     b.HasIndex("GameAnimalId");
 
                     b.ToTable("HuntingSeasons");
-                });
-
-            modelBuilder.Entity("JagtApp.Models.UserAmmunition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartridgeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartridgeId");
-
-                    b.HasIndex("OwnerId");
-
-                    b.ToTable("UserAmmunitions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -548,17 +503,6 @@ namespace JagtApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("JagtApp.Models.AllowedFirearmType", b =>
-                {
-                    b.HasOne("JagtApp.Models.GameRequirements", "GameRequirement")
-                        .WithMany()
-                        .HasForeignKey("GameRequirementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GameRequirement");
-                });
-
             modelBuilder.Entity("JagtApp.Models.Caliber", b =>
                 {
                     b.HasOne("JagtApp.Models.Firearm", null)
@@ -636,32 +580,9 @@ namespace JagtApp.Migrations
 
             modelBuilder.Entity("JagtApp.Models.HuntingSeason", b =>
                 {
-                    b.HasOne("JagtApp.Models.GameAnimal", "GameAnimal")
+                    b.HasOne("JagtApp.Models.GameAnimal", null)
                         .WithMany("HuntingSeasons")
-                        .HasForeignKey("GameAnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GameAnimal");
-                });
-
-            modelBuilder.Entity("JagtApp.Models.UserAmmunition", b =>
-                {
-                    b.HasOne("JagtApp.Models.Cartridge", "AssociatedCartridge")
-                        .WithMany()
-                        .HasForeignKey("CartridgeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("JagtApp.Data.ApplicationUser", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AssociatedCartridge");
-
-                    b.Navigation("Owner");
+                        .HasForeignKey("GameAnimalId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

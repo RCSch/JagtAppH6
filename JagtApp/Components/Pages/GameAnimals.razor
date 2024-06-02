@@ -1,6 +1,49 @@
 ﻿@page "/gameanimals"
 @using JagtApp.Models
+@using JagtApp.Services
+@inject GameAnimalService GameAnimalService
 
 <h3>Vildtarter</h3>
 
-<p>Dette er siden for Vildtarter.</p>
+<p>Dette er siden for vildtarter.</p>
+<p>Her kan du se, hvilke vildtarter, der er i sæson.</p>
+
+@if (gameAnimals == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var gameAnimal in gameAnimals)
+        {
+            <li>
+                @gameAnimal.GameName (Class: @gameAnimal.GameClass)
+                @if (gameAnimal.HuntingSeasons.Any())
+                {
+                    <ul>
+                        @foreach (var season in gameAnimal.HuntingSeasons)
+                        {
+                            <li>
+                                @season.GetStartDate(DateTime.Now.Year).ToString("dd MMMM") - @season.GetEndDate(DateTime.Now.Year).ToString("dd MMMM")
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>Ingen jagtsæson</p>
+                }
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<GameAnimal> gameAnimals;
+
+    protected override async Task OnInitializedAsync()
+    {
+        gameAnimals = await GameAnimalService.GetGameAnimals();
+    }
+}

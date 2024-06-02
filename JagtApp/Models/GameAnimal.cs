@@ -1,4 +1,6 @@
 ﻿using JagtApp.Enums;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JagtApp.Models
 {
@@ -9,7 +11,10 @@ namespace JagtApp.Models
         public GameClass GameClass { get; set; }
         public List<HuntingSeason> HuntingSeasons { get; set; }
 
-        public GameAnimal() { }
+        public GameAnimal()
+        {
+            HuntingSeasons = new List<HuntingSeason>();
+        }
 
         public GameAnimal(int gameId, string gameName, GameClass gameClass)
         {
@@ -17,6 +22,20 @@ namespace JagtApp.Models
             GameName = gameName;
             GameClass = gameClass;
             HuntingSeasons = new List<HuntingSeason>();
+        }
+
+        // Tilføj denne metode
+        public bool IsInSeasonToday()
+        {
+            DateTime today = DateTime.Today;
+            foreach (var season in HuntingSeasons)
+            {
+                if (season.IsInSeason(today))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

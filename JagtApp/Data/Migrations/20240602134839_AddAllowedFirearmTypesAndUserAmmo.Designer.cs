@@ -4,6 +4,7 @@ using JagtApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JagtApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240602134839_AddAllowedFirearmTypesAndUserAmmo")]
+    partial class AddAllowedFirearmTypesAndUserAmmo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -372,7 +375,7 @@ namespace JagtApp.Migrations
                     b.Property<int>("EndMonth")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameAnimalId")
+                    b.Property<int?>("GameAnimalId")
                         .HasColumnType("int");
 
                     b.Property<int>("StartDay")
@@ -636,13 +639,9 @@ namespace JagtApp.Migrations
 
             modelBuilder.Entity("JagtApp.Models.HuntingSeason", b =>
                 {
-                    b.HasOne("JagtApp.Models.GameAnimal", "GameAnimal")
+                    b.HasOne("JagtApp.Models.GameAnimal", null)
                         .WithMany("HuntingSeasons")
-                        .HasForeignKey("GameAnimalId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("GameAnimal");
+                        .HasForeignKey("GameAnimalId");
                 });
 
             modelBuilder.Entity("JagtApp.Models.UserAmmunition", b =>

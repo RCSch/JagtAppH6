@@ -41,6 +41,26 @@ namespace JagtApp.Controllers
             return gameAnimal;
         }
 
+        [HttpGet("in-season-today")]
+        public async Task<ActionResult<IEnumerable<GameAnimal>>> GetGameAnimalsInSeasonToday()
+        {
+            var today = DateTime.Today;
+            var gameAnimalsInSeason = await _context.GameAnimals
+                .Include(ga => ga.HuntingSeasons)
+                .Where(ga => ga.HuntingSeasons.Any(hs =>
+                    (hs.StartMonth < hs.EndMonth && today.Month >= hs.StartMonth && today.Month <= hs.EndMonth && today.Day >= hs.StartDay && today.Day <= hs.EndDay) ||
+                    (hs.StartMonth > hs.EndMonth &&
+                        ((today.Month == hs.StartMonth && today.Day >= hs.StartDay) ||
+                         (today.Month == hs.EndMonth && today.Day <= hs.EndDay) ||
+                         (today.Month > hs.StartMonth || today.Month < hs.EndMonth)))
+                ))
+                .ToListAsync();
+
+            return gameAnimalsInSeason;
+        }
+
+
+
         // PUT: api/GameAnimals/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutGameAnimal(int id, GameAnimal gameAnimal)
