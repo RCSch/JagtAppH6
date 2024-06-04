@@ -101,8 +101,6 @@ namespace JagtApp.Controllers
             return NoContent();
         }
 
-       
-
         // DELETE: api/Firearms/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFirearm(int id)

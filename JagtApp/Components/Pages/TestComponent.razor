@@ -1,0 +1,14 @@
+﻿@page "/test"
+@inject NavigationManager NavigationManager
+
+<h3>Test Component</h3>
+
+<button class="btn btn-primary" @onclick="HandleClick">Click me</button>
+
+@code {
+    private void HandleClick()
+    {
+        Console.WriteLine("Button clicked!");
+        NavigationManager.NavigateTo("/");
+    }
+}

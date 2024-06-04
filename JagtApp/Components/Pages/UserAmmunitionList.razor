@@ -1,0 +1,58 @@
+﻿@page "/userammunition"
+@using JagtApp.Services
+@using JagtApp.Models
+@inject UserAmmunitionService UserAmmunitionService
+@inject NavigationManager NavigationManager
+
+<h3>Min Ammunition</h3>
+
+@if (userAmmunitions == null)
+{
+    <p>Loading...</p>
+}
+else if (!userAmmunitions.Any())
+{
+    <p>Du har ingen ammunition registreret.</p>
+}
+else
+{
+    <ul>
+        @foreach (var ammo in userAmmunitions)
+        {
+            <li>
+                @ammo.AssociatedCartridge.CartridgeName: @ammo.Quantity stk.
+                <button class="btn btn-secondary btn-sm" @onclick="() => Edit(ammo.Id)">Rediger</button>
+            </li>
+        }
+    </ul>
+}
+
+<button class="btn btn-primary" @onclick="Create">Tilføj ny ammunition</button>
+<button class="btn btn-secondary" @onclick="NavigateHome">Gå til Startside</button>
+
+@code {
+    private List<UserAmmunition> userAmmunitions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userAmmunitions = await UserAmmunitionService.GetUserAmmunition();
+    }
+
+    private void Create()
+    {
+        Console.WriteLine("Create button clicked");
+        NavigationManager.NavigateTo("/userammunition/create");
+    }
+
+    private void Edit(int id)
+    {
+        Console.WriteLine($"Edit button clicked for Id: {id}");
+        NavigationManager.NavigateTo($"/userammunition/edit/{id}");
+    }
+
+    private void NavigateHome()
+    {
+        Console.WriteLine("NavigateHome button clicked");
+        NavigationManager.NavigateTo("/");
+    }
+}

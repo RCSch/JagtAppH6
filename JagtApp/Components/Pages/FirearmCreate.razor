@@ -1,0 +1,65 @@
+﻿@page "/firearmcreate"
+@using JagtApp.Models
+@using JagtApp.Enums
+@inject FirearmService FirearmService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Create a New Firearm</h3>
+
+<EditForm Model="@firearm" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="faName" class="form-label">Firearm Name</label>
+        <InputText id="faName" class="form-control" @bind-Value="firearm.FAName" />
+    </div>
+
+    <div class="mb-3">
+        <label for="faType" class="form-label">Firearm Type</label>
+        <InputSelect id="faType" class="form-control" @bind-Value="firearm.Type">
+            <option value="">Select Firearm Type</option>
+            @foreach (var type in Enum.GetValues(typeof(FirearmType)))
+            {
+                <option value="@type">@type</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label for="licenceExpirationDate" class="form-label">Licence Expiration Date</label>
+        <InputDate id="licenceExpirationDate" class="form-control" @bind-Value="firearm.LicenceExpirationDate" />
+    </div>
+
+    <div class="mb-3">
+        <label for="supportedCalibers" class="form-label">Supported Calibers</label>
+        <CaliberSelect @bind-Value="firearm.SupportedCalibers" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</EditForm>
+
+@code {
+    private Firearm firearm = new Firearm();
+    private List<Caliber> calibers = new List<Caliber>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        calibers = await FirearmService.GetCalibers();
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            firearm.OwnerId = user.FindFirst("sub")?.Value;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await FirearmService.CreateFirearm(firearm);
+        NavigationManager.NavigateTo("/firearmlist");
+    }
+}

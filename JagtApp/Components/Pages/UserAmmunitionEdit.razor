@@ -1,0 +1,64 @@
+﻿@page "/userammunition/edit/{id:int}"
+@using JagtApp.Services
+@using JagtApp.Models
+@inject UserAmmunitionService UserAmmunitionService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>Rediger ammunition</h3>
+
+<EditForm Model="@userAmmunition" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="cartridge">Cartridge</label>
+        <InputSelect id="cartridge" @bind-Value="userAmmunition.CartridgeId" class="form-control">
+            @foreach (var cartridge in cartridges)
+            {
+                <option value="@cartridge.Id">@cartridge.CartridgeName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="quantity">Quantity</label>
+        <InputNumber id="quantity" @bind-Value="userAmmunition.Quantity" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private UserAmmunition userAmmunition = new UserAmmunition();
+    private List<Cartridge> cartridges = new List<Cartridge>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (!user.Identity.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/identity/account/login");
+            return;
+        }
+
+        cartridges = await UserAmmunitionService.GetCartridges();
+        userAmmunition = await UserAmmunitionService.GetUserAmmunitionById(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await UserAmmunitionService.UpdateUserAmmunition(userAmmunition.Id, userAmmunition);
+        NavigationManager.NavigateTo("/userammunition");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/userammunition");
+    }
+}

@@ -1,0 +1,39 @@
+﻿@page "/firearms"
+@inject NavigationManager NavigationManager
+@inject FirearmService FirearmService
+
+<h3>Mine Våben</h3>
+
+@if (firearms == null)
+{
+    <p>Loading...</p>
+}
+else if (!firearms.Any())
+{
+    <p>Du har ingen våben registreret.</p>
+}
+else
+{
+    <ul>
+        @foreach (var firearm in firearms)
+        {
+            <li>@firearm.FAName - @firearm.Type</li>
+        }
+    </ul>
+}
+
+<button class="btn btn-primary" @onclick="CreateNewFirearm">Tilføj nyt våben</button>
+
+@code {
+    private List<Firearm> firearms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        firearms = await FirearmService.GetFirearms();
+    }
+
+    private void CreateNewFirearm()
+    {
+        NavigationManager.NavigateTo("/firearmcreate");
+    }
+}

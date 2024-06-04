@@ -1,0 +1,27 @@
+﻿@using JagtApp.Models
+@inject FirearmService FirearmService
+
+<select multiple class="form-control" @bind="SelectedCalibers">
+    @foreach (var caliber in Calibers)
+    {
+        <option value="@caliber.Id">@caliber.CaliberName</option>
+    }
+</select>
+
+@code {
+    [Parameter]
+    public List<int> SelectedCalibers { get; set; } = new List<int>();
+
+    private List<Caliber> Calibers = new List<Caliber>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Calibers = await FirearmService.GetCalibers();
+    }
+
+    private void HandleChange(ChangeEventArgs e)
+    {
+        var selectedOptions = e.Value.ToString().Split(',').Select(int.Parse).ToList();
+        SelectedCalibers = selectedOptions;
+    }
+}

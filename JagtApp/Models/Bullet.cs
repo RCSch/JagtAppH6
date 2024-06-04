@@ -14,7 +14,7 @@ namespace JagtApp.Models
         [StringLength(100, ErrorMessage = "Beskrivelsen af kuglen kan højst være 100 tegn.")]
         public string BulletDescription { get; set; } //f.eks. "Ekspanderende, blyfri kugle på XX gram"
 
-        [Range(0.1, 100.0, ErrorMessage = "Vægten af kuglen skal være mellem 0,1 og 100 gram.")]
+        [Range(0.1, 100000.0, ErrorMessage = "Vægten af kuglen skal være mellem 0,1 gram og 100 kilogram.")]
         public double BulletWeight { get; set; } //Anføres i gram, f.eks. 10.8
         
         [Range(0.1, 25.0, ErrorMessage = "Diameteren af kuglen skal være mellem 0,1 og 25 millimeter.")]
