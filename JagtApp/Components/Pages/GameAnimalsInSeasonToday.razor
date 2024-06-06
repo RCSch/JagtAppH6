@@ -1,0 +1,40 @@
+﻿@page "/gameanimals-in-season-today"
+@using JagtApp.Services;
+@using JagtApp.Models;
+@inject GameAnimalService GameAnimalService
+
+<h3>Vildtarter i jagtsæson i dag</h3>
+
+@if (gameAnimalsInSeasonToday == null)
+{
+    <p>Loading...</p>
+}
+else if (!gameAnimalsInSeasonToday.Any())
+{
+    <p>Der er ingen vildtarter i jagtsæson i dag. Øv!</p>
+}
+else
+{
+    <ul>
+        @foreach (var gameAnimal in gameAnimalsInSeasonToday)
+        {
+            <li>@gameAnimal.GameName (@gameAnimal.GameClass)</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<GameAnimal> gameAnimalsInSeasonToday;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            gameAnimalsInSeasonToday = await GameAnimalService.GetGameAnimalsInSeasonToday();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading game animals in season today: {ex.Message}");
+        }
+    }
+}
