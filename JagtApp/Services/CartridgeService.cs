@@ -27,17 +27,32 @@ namespace JagtApp.Services
 
         public async Task CreateCartridge(Cartridge cartridge)
         {
-            await _httpClient.PostAsJsonAsync("api/Cartridges", cartridge);
+            var response = await _httpClient.PostAsJsonAsync("api/Cartridges", cartridge);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error creating cartridge: {response.StatusCode}, {errorContent}");
+            }
         }
 
         public async Task UpdateCartridge(int id, Cartridge cartridge)
         {
-            await _httpClient.PutAsJsonAsync($"api/Cartridges/{id}", cartridge);
+            var response = await _httpClient.PutAsJsonAsync($"api/Cartridges/{id}", cartridge);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error updating cartridge: {response.StatusCode}, {errorContent}");
+            }
         }
 
         public async Task DeleteCartridge(int id)
         {
-            await _httpClient.DeleteAsync($"api/Cartridges/{id}");
+            var response = await _httpClient.DeleteAsync($"api/Cartridges/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error deleting cartridge: {response.StatusCode}, {errorContent}");
+            }
         }
     }
 }

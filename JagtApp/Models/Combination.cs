@@ -49,7 +49,7 @@ namespace JagtApp.Models
                 return true;
             }
 
-            if (gameClass == GameClass.Class1)
+            if (gameClass == GameClass.Klasse1)
             {
                 if (AssociatedCartridge != null)
                 {
@@ -65,7 +65,7 @@ namespace JagtApp.Models
                     }
                 }
             }
-            else if (gameClass == GameClass.Class2)
+            else if (gameClass == GameClass.Klasse2)
             {
                 if (AssociatedCartridge != null)
                 {
@@ -81,7 +81,7 @@ namespace JagtApp.Models
                     }
                 }
             }
-            else if (gameClass == GameClass.Class3)
+            else if (gameClass == GameClass.Klasse3)
             {
                 if (AssociatedCartridge != null)
                 {
@@ -95,7 +95,7 @@ namespace JagtApp.Models
                     }
                 }
             }
-            else if (gameClass == GameClass.Class4)
+            else if (gameClass == GameClass.Klasse4)
             {
                 if (AssociatedCartridge != null)
                 {
@@ -107,7 +107,7 @@ namespace JagtApp.Models
                     }
                 }
             }
-            else if (gameClass == GameClass.Class5)
+            else if (gameClass == GameClass.Klasse5)
             {
                 if (AssociatedCartridge != null)
                 {

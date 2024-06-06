@@ -19,6 +19,30 @@ namespace JagtApp.Controllers
             _context = context;
         }
 
+        // CREATE
+
+        [HttpPost]
+        public async Task<ActionResult<UserAmmunition>> PostUserAmmunition(UserAmmunition userAmmunition)
+        {
+            Console.WriteLine($"Received ammunition with Quantity: {userAmmunition.Quantity}, CartridgeId: {userAmmunition.CartridgeId}, OwnerId: {userAmmunition.OwnerId}");
+
+            var owner = await _context.Users.FindAsync(userAmmunition.OwnerId);
+
+            if (owner == null)
+            {
+                Console.WriteLine("Invalid OwnerId.");
+                return BadRequest("Invalid OwnerId");
+            }
+
+            userAmmunition.Owner = owner;
+
+            _context.UserAmmunitions.Add(userAmmunition);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUserAmmunition", new { id = userAmmunition.Id }, userAmmunition);
+        }
+
+
         // GET: api/UserAmmunition
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserAmmunition>>> GetUserAmmunitions()
@@ -75,17 +99,7 @@ namespace JagtApp.Controllers
 
             return NoContent();
         }
-
-        // POST: api/UserAmmunition
-        [HttpPost]
-        public async Task<ActionResult<UserAmmunition>> PostUserAmmunition(UserAmmunition userAmmunition)
-        {
-            _context.UserAmmunitions.Add(userAmmunition);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUserAmmunition", new { id = userAmmunition.Id }, userAmmunition);
-        }
-
+               
         // DELETE: api/UserAmmunition/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUserAmmunition(int id)

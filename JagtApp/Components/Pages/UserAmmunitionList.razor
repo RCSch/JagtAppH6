@@ -28,7 +28,6 @@ else
 }
 
 <button class="btn btn-primary" @onclick="Create">Tilføj ny ammunition</button>
-<button class="btn btn-secondary" @onclick="NavigateHome">Gå til Startside</button>
 
 @code {
     private List<UserAmmunition> userAmmunitions;
@@ -50,9 +49,4 @@ else
         NavigationManager.NavigateTo($"/userammunition/edit/{id}");
     }
 
-    private void NavigateHome()
-    {
-        Console.WriteLine("NavigateHome button clicked");
-        NavigationManager.NavigateTo("/");
-    }
 }

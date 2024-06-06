@@ -1,6 +1,10 @@
 ﻿@page "/firearms"
-@inject NavigationManager NavigationManager
+@using JagtApp.Models
+@using JagtApp.Enums
 @inject FirearmService FirearmService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+@inject ILogger<FirearmList> Logger
 
 <h3>Mine Våben</h3>
 
@@ -26,10 +30,45 @@ else
 
 @code {
     private List<Firearm> firearms;
+    private string userId;
 
     protected override async Task OnInitializedAsync()
     {
-        firearms = await FirearmService.GetFirearms();
+        try
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                Logger.LogInformation("User is authenticated.");
+
+                foreach (var claim in user.Claims)
+                {
+                    Logger.LogInformation("Claim Type: {Type}, Claim Value: {Value}", claim.Type, claim.Value);
+                }
+
+                userId = user.FindFirst("sub")?.Value ?? user.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+                Logger.LogInformation("User ID: {UserId}", userId);
+
+                if (!string.IsNullOrEmpty(userId))
+                {
+                    var allFirearms = await FirearmService.GetFirearms();
+                    Logger.LogInformation("Total Firearms Retrieved: {Count}", allFirearms?.Count ?? 0);
+
+                    firearms = allFirearms.Where(f => f.OwnerId == userId).ToList();
+                    Logger.LogInformation("Filtered Firearms Count: {Count}", firearms.Count);
+                }
+            }
+            else
+            {
+                Logger.LogWarning("User is not authenticated.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "An error occurred while loading firearms.");
+        }
     }
 
     private void CreateNewFirearm()

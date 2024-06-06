@@ -2,24 +2,25 @@
 @using JagtApp.Models
 @using JagtApp.Enums
 @inject FirearmService FirearmService
+@inject CaliberService CaliberService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<h3>Create a New Firearm</h3>
+<h3>Opret nyt våben</h3>
 
-<EditForm Model="@firearm" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="firearm" OnValidSubmit="HandleValidSubmit" FormName="firearmForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label for="faName" class="form-label">Firearm Name</label>
-        <InputText id="faName" class="form-control" @bind-Value="firearm.FAName" />
+    <div class="form-group">
+        <label for="FAName">Navn</label>
+        <InputText id="FAName" class="form-control" @bind-Value="firearm.FAName" />
     </div>
 
-    <div class="mb-3">
-        <label for="faType" class="form-label">Firearm Type</label>
-        <InputSelect id="faType" class="form-control" @bind-Value="firearm.Type">
-            <option value="">Select Firearm Type</option>
+    <div class="form-group">
+        <label for="Type">Type</label>
+        <InputSelect id="Type" class="form-control" @bind-Value="firearm.Type">
+            <option value="">Vælg type</option>
             @foreach (var type in Enum.GetValues(typeof(FirearmType)))
             {
                 <option value="@type">@type</option>
@@ -27,39 +28,109 @@
         </InputSelect>
     </div>
 
-    <div class="mb-3">
-        <label for="licenceExpirationDate" class="form-label">Licence Expiration Date</label>
-        <InputDate id="licenceExpirationDate" class="form-control" @bind-Value="firearm.LicenceExpirationDate" />
+    <div class="form-group">
+        <label for="LicenceExpirationDate">Tilladelsens udløbsdato</label>
+        <InputDate id="LicenceExpirationDate" class="form-control" @bind-Value="firearm.LicenceExpirationDate" />
     </div>
 
-    <div class="mb-3">
-        <label for="supportedCalibers" class="form-label">Supported Calibers</label>
-        <CaliberSelect @bind-Value="firearm.SupportedCalibers" />
+    <div class="form-group">
+        <label for="Caliber">Kaliber</label>
+        <InputSelect id="Caliber" class="form-control" @bind-Value="selectedCaliberId">
+            <option value="">Vælg kaliber</option>
+            @if (calibers != null)
+            {
+                @foreach (var caliber in calibers)
+                {
+                    <option value="@caliber.Id">@caliber.CaliberName</option>
+                }
+            }
+        </InputSelect>
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" class="btn btn-primary">Opret</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Annuller</button>
 </EditForm>
 
 @code {
     private Firearm firearm = new Firearm();
     private List<Caliber> calibers = new List<Caliber>();
+    private int selectedCaliberId;
 
     protected override async Task OnInitializedAsync()
     {
-        calibers = await FirearmService.GetCalibers();
-
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
+        try
         {
-            firearm.OwnerId = user.FindFirst("sub")?.Value;
+            calibers = await CaliberService.GetCalibers();
+            Console.WriteLine($"Calibers loaded: {calibers.Count}");
+
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                firearm.OwnerId = user.FindFirst("sub")?.Value ?? user.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+                Console.WriteLine($"User ID: {firearm.OwnerId}");
+            }
+            else
+            {
+                Console.WriteLine("User is not authenticated.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in OnInitializedAsync: {ex.Message}");
         }
     }
 
     private async Task HandleValidSubmit()
     {
-        await FirearmService.CreateFirearm(firearm);
-        NavigationManager.NavigateTo("/firearmlist");
+        try
+        {
+            Console.WriteLine($"Submitting firearm:");
+            Console.WriteLine($"FAName: {firearm.FAName}");
+            Console.WriteLine($"OwnerId: {firearm.OwnerId}");
+            Console.WriteLine($"Type: {firearm.Type}");
+            Console.WriteLine($"LicenceExpirationDate: {firearm.LicenceExpirationDate}");
+            Console.WriteLine($"Selected Caliber ID: {selectedCaliberId}");
+
+            var selectedCaliber = calibers.FirstOrDefault(c => c.Id == selectedCaliberId);
+            if (selectedCaliber != null)
+            {
+                firearm.SupportedCalibers = new List<Caliber> { selectedCaliber };
+                Console.WriteLine($"Selected Caliber: {selectedCaliber.CaliberName}");
+            }
+            else
+            {
+                Console.WriteLine("No caliber selected.");
+            }
+
+            if (string.IsNullOrWhiteSpace(firearm.FAName))
+            {
+                Console.WriteLine("FAName is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(firearm.OwnerId))
+            {
+                Console.WriteLine("OwnerId is required.");
+            }
+
+            if (firearm.SupportedCalibers == null || !firearm.SupportedCalibers.Any())
+            {
+                Console.WriteLine("At least one caliber is required.");
+            }
+
+            await FirearmService.CreateFirearm(firearm);
+            Console.WriteLine("Firearm created successfully.");
+            NavigationManager.NavigateTo("/firearms");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error in HandleValidSubmit: {ex.Message}");
+        }
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/firearms");
     }
 }

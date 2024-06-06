@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Extensions.Logging; // Tilføj dette
-using JagtApp.Client.Pages;
+using Microsoft.Extensions.Logging;
 using JagtApp.Components;
 using JagtApp.Components.Account;
 using JagtApp.Data;
@@ -26,8 +25,6 @@ builder.Services.AddScoped<FirearmService>();
 builder.Services.AddScoped<BulletService>();
 builder.Services.AddScoped<CartridgeService>();
 builder.Services.AddScoped<CaliberService>();
-
-
 
 // Add HttpClient with hardcoded BaseAddress
 builder.Services.AddHttpClient<GameAnimalService>(client =>
@@ -113,8 +110,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers(); // Ensure controllers are included
     endpoints.MapRazorComponents<App>()
         .AddInteractiveServerRenderMode()
-        .AddInteractiveWebAssemblyRenderMode()
-        .AddAdditionalAssemblies(typeof(JagtApp.Client._Imports).Assembly);
+        .AddInteractiveWebAssemblyRenderMode();
     endpoints.MapAdditionalIdentityEndpoints();
 });
 

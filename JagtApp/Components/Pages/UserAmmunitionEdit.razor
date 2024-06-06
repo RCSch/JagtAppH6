@@ -2,6 +2,7 @@
 @using JagtApp.Services
 @using JagtApp.Models
 @inject UserAmmunitionService UserAmmunitionService
+@inject CartridgeService CartridgeService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
@@ -47,7 +48,7 @@
             return;
         }
 
-        cartridges = await UserAmmunitionService.GetCartridges();
+        cartridges = await CartridgeService.GetCartridges();
         userAmmunition = await UserAmmunitionService.GetUserAmmunitionById(Id);
     }
 

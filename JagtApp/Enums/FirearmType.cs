@@ -2,10 +2,12 @@
 {
     public enum FirearmType
     {
-        Rifle,
-        Shotgun,
-        Handgun,
-        Archery,
-        AirRifle
+        Riffel,
+        Haglbøsse,
+        Pistol,
+        Bue,
+        Luftgevær,
+        Armbrøst,
+        Revolver
     }
 }

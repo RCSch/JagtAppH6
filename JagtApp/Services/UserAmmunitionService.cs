@@ -27,22 +27,32 @@ namespace JagtApp.Services
 
         public async Task CreateUserAmmunition(UserAmmunition userAmmunition)
         {
-            await _httpClient.PostAsJsonAsync("api/UserAmmunition", userAmmunition);
+            var response = await _httpClient.PostAsJsonAsync("api/UserAmmunition", userAmmunition);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error creating user ammunition: {response.StatusCode}, {errorContent}");
+            }
         }
 
         public async Task UpdateUserAmmunition(int id, UserAmmunition userAmmunition)
         {
-            await _httpClient.PutAsJsonAsync($"api/UserAmmunition/{id}", userAmmunition);
+            var response = await _httpClient.PutAsJsonAsync($"api/UserAmmunition/{id}", userAmmunition);
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error updating user ammunition: {response.StatusCode}, {errorContent}");
+            }
         }
 
         public async Task DeleteUserAmmunition(int id)
         {
-            await _httpClient.DeleteAsync($"api/UserAmmunition/{id}");
-        }
-
-        public async Task<List<Cartridge>> GetCartridges()
-        {
-            return await _httpClient.GetFromJsonAsync<List<Cartridge>>("api/Cartridges");
+            var response = await _httpClient.DeleteAsync($"api/UserAmmunition/{id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new HttpRequestException($"Error deleting user ammunition: {response.StatusCode}, {errorContent}");
+            }
         }
     }
 }

@@ -1,32 +1,34 @@
 ﻿@page "/userammunition/create"
-@using JagtApp.Services
 @using JagtApp.Models
+@using JagtApp.Services
+@inject CartridgeService CartridgeService
 @inject UserAmmunitionService UserAmmunitionService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3>Tilføj ny ammunition</h3>
 
-<EditForm Model="userAmmunition" OnValidSubmit="HandleValidSubmit">
+<EditForm Model="@userAmmunition" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label for="cartridgeId" class="form-label">Cartridge</label>
-        <select id="cartridgeId" class="form-select" @bind="userAmmunition.CartridgeId">
+    <div class="form-group">
+        <label for="cartridge">Patron</label>
+        <InputSelect id="cartridge" @bind-Value="userAmmunition.CartridgeId" class="form-control">
+            <option value="">Vælg patron</option>
             @foreach (var cartridge in cartridges)
             {
                 <option value="@cartridge.Id">@cartridge.CartridgeName</option>
             }
-        </select>
+        </InputSelect>
     </div>
 
-    <div class="mb-3">
-        <label for="quantity" class="form-label">Mængde</label>
-        <InputNumber id="quantity" class="form-control" @bind-Value="userAmmunition.Quantity" />
+    <div class="form-group">
+        <label for="quantity">Mængde</label>
+        <InputNumber id="quantity" @bind-Value="userAmmunition.Quantity" class="form-control" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Tilføj</button>
+    <button type="submit" class="btn btn-primary">Opret</button>
     <button type="button" class="btn btn-secondary" @onclick="Cancel">Annuller</button>
 </EditForm>
 
@@ -36,19 +38,28 @@
 
     protected override async Task OnInitializedAsync()
     {
-        cartridges = await UserAmmunitionService.GetCartridges();
-
+        Console.WriteLine("Initializing component...");
+        cartridges = await CartridgeService.GetCartridges();
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
         if (user.Identity.IsAuthenticated)
         {
+            Console.WriteLine("User is authenticated.");
             userAmmunition.OwnerId = user.FindFirst("sub")?.Value;
+            Console.WriteLine($"Owner ID set to: {userAmmunition.OwnerId}");
+        }
+        else
+        {
+            Console.WriteLine("User is not authenticated.");
         }
     }
 
     private async Task HandleValidSubmit()
     {
+        Console.WriteLine("HandleValidSubmit called...");
+        Console.WriteLine($"Creating ammunition with Quantity: {userAmmunition.Quantity}, CartridgeId: {userAmmunition.CartridgeId}, OwnerId: {userAmmunition.OwnerId}");
+
         await UserAmmunitionService.CreateUserAmmunition(userAmmunition);
         NavigationManager.NavigateTo("/userammunition");
     }
