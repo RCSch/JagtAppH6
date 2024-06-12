@@ -1,0 +1,35 @@
+﻿@page "/combinations"
+@using JagtApp.Models
+@using JagtApp.Services
+@inject CombinationService CombinationService
+
+<h3>Mine Kombinationer</h3>
+
+@if (combinations == null)
+{
+    <p>Loading...</p>
+}
+else if (!combinations.Any())
+{
+    <p>Du har ingen kombinationer registreret.</p>
+}
+else
+{
+    <ul>
+        @foreach (var combination in combinations)
+        {
+            <li>@combination.CombiName - @combination.AssociatedCartridge.CartridgeName - @combination.AssociatedFirearm.FAName - @combination.IsLegal</li>
+        }
+    </ul>
+}
+
+<a href="/combinationcreate" class="btn btn-primary">Tilføj ny kombination</a>
+
+@code {
+    private List<Combination> combinations;
+
+    protected override async Task OnInitializedAsync()
+    {
+        combinations = await CombinationService.GetCombinations();
+    }
+}

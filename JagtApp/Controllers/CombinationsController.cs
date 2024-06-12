@@ -49,10 +49,40 @@ namespace JagtApp.Controllers
             combination.AssociatedFirearm = associatedFirearm;
             combination.LegalityRequirements = legalityRequirements;
 
+            // Beregn V100 og E100
+            combination.V100 = CalculateV100(combination.V0, associatedCartridge.AssociatedBullet);
+            combination.E100 = CalculateE100(combination.V100, associatedCartridge.AssociatedBullet);
+            combination.E0 = CalculateE0(combination.V0, associatedCartridge.AssociatedBullet);
+
             _context.Combinations.Add(combination);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCombination", new { id = combination.Id }, combination);
+        }
+        private double CalculateV100(double v0, Bullet bullet)
+        {
+            double dragCoefficient = 0.3; // Omtrentlig "drag coefficient"
+            double densityAir = 1.225; // Luftdensitet ved havniveau (i kg/m^3)
+            double bulletWeight = bullet.BulletWeight;
+            double bc = bullet.BallisticCoefficient;
+            double distance = 100; // Afstand på 100 meter
+
+            double v100 = Math.Sqrt(v0 * v0 - (2 * dragCoefficient * bulletWeight * densityAir * distance)) /
+                          (1 + (0.5 * dragCoefficient * bulletWeight * densityAir * distance) / (bc * v0));
+
+            return v100;
+        }
+
+        private double CalculateE0(double v0, Bullet bullet)
+        {
+            double bulletWeight = bullet.BulletWeight / 1000;
+            return v0 * v0 * bulletWeight / 2;
+        }
+
+        private double CalculateE100(double v100, Bullet bullet)
+        {
+            double bulletWeight = bullet.BulletWeight / 1000;
+            return v100 * v100 * bulletWeight / 2;
         }
 
         // GET: api/Combinations
@@ -121,8 +151,6 @@ namespace JagtApp.Controllers
 
             return NoContent();
         }
-
-       
 
         // DELETE: api/Combinations/5
         [HttpDelete("{id}")]

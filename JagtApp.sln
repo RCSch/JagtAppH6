@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp", "JagtApp\JagtApp.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp.Client", "JagtApp.Client\JagtApp.Client.csproj", "{FFA6C6EE-3814-4DAB-9E6F-8FFF50277608}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JagtApp.Tests", "JagtApp.Tests\JagtApp.Tests.csproj", "{F291B224-BF23-49D8-863C-5A5BDFA8D9BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp.Tests", "JagtApp.Tests\JagtApp.Tests.csproj", "{F291B224-BF23-49D8-863C-5A5BDFA8D9BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JagtApp.Console", "JagtApp.Console\JagtApp.Console.csproj", "{BBE2EC7F-EC50-4FED-A108-82A2EC02278F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JagtApp.Console", "JagtApp.Console\JagtApp.Console.csproj", "{BBE2EC7F-EC50-4FED-A108-82A2EC02278F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

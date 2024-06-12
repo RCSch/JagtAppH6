@@ -21,13 +21,13 @@ else
         {
             <li>
                 @ammo.AssociatedCartridge.CartridgeName: @ammo.Quantity stk.
-                <button class="btn btn-secondary btn-sm" @onclick="() => Edit(ammo.Id)">Rediger</button>
+                <a href="/userammunition/edit/@ammo.Id" class="btn btn-secondary btn-sm">Rediger</a>
             </li>
         }
     </ul>
 }
 
-<button class="btn btn-primary" @onclick="Create">Tilføj ny ammunition</button>
+<a href="/userammunition/create" class="btn btn-primary">Tilføj ny ammunition</a>
 
 @code {
     private List<UserAmmunition> userAmmunitions;
@@ -36,17 +36,4 @@ else
     {
         userAmmunitions = await UserAmmunitionService.GetUserAmmunition();
     }
-
-    private void Create()
-    {
-        Console.WriteLine("Create button clicked");
-        NavigationManager.NavigateTo("/userammunition/create");
-    }
-
-    private void Edit(int id)
-    {
-        Console.WriteLine($"Edit button clicked for Id: {id}");
-        NavigationManager.NavigateTo($"/userammunition/edit/{id}");
-    }
-
 }

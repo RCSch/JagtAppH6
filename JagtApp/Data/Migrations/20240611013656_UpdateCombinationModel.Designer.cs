@@ -4,6 +4,7 @@ using JagtApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JagtApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611013656_UpdateCombinationModel")]
+    partial class UpdateCombinationModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,15 +33,15 @@ namespace JagtApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AssociatedCartridgeId")
+                    b.Property<int>("AssociatedCartridgeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AssociatedFirearmId")
+                    b.Property<int>("AssociatedFirearmId")
                         .HasColumnType("int");
 
                     b.Property<string>("CombiName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("E0")
                         .HasColumnType("float");
@@ -52,7 +55,7 @@ namespace JagtApp.Migrations
                     b.Property<bool>("IsLegal")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LegalityRequirementsId")
+                    b.Property<int>("LegalityRequirementsId")
                         .HasColumnType("int");
 
                     b.Property<double>("V0")
@@ -234,6 +237,7 @@ namespace JagtApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BulletDescription")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -551,15 +555,21 @@ namespace JagtApp.Migrations
                 {
                     b.HasOne("JagtApp.Models.Cartridge", "AssociatedCartridge")
                         .WithMany()
-                        .HasForeignKey("AssociatedCartridgeId");
+                        .HasForeignKey("AssociatedCartridgeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Firearm", "AssociatedFirearm")
                         .WithMany()
-                        .HasForeignKey("AssociatedFirearmId");
+                        .HasForeignKey("AssociatedFirearmId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("JagtApp.Models.GameRequirements", "LegalityRequirements")
                         .WithMany()
-                        .HasForeignKey("LegalityRequirementsId");
+                        .HasForeignKey("LegalityRequirementsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AssociatedCartridge");
 

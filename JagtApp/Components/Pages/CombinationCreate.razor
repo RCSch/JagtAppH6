@@ -1,6 +1,95 @@
-﻿namespace JagtApp.Components.Pages
+﻿@page "/combinationcreate"
+@using JagtApp.Models
+@using JagtApp.Services
+@inject CombinationService CombinationService
+@inject FirearmService FirearmService
+@inject CartridgeService CartridgeService
+
+<h3>Opret ny Kombination</h3>
+
+<EditForm Model="@combination" OnValidSubmit="HandleValidSubmit" FormName="combinationForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="CombiName">Navn</label>
+        <InputText id="CombiName" class="form-control" @bind-Value="combination.CombiName" />
+    </div>
+
+    <div class="form-group">
+        <label for="AssociatedCartridge">Ammunition</label>
+        <InputSelect id="AssociatedCartridge" class="form-control" @bind-Value="selectedCartridgeId">
+            <option value="">Vælg ammunition</option>
+            @foreach (var cartridge in cartridges)
+            {
+                <option value="@cartridge.Id">@cartridge.CartridgeName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="AssociatedFirearm">Våben</label>
+        <InputSelect id="AssociatedFirearm" class="form-control" @bind-Value="selectedFirearmId">
+            <option value="">Vælg våben</option>
+            @foreach (var firearm in firearms)
+            {
+                <option value="@firearm.Id">@firearm.FAName</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="form-group">
+        <label for="V0">Mundingshastighed (V0)</label>
+        <InputNumber id="V0" class="form-control" @bind-Value="combination.V0" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Opret</button>
+    <a href="/combinations" class="btn btn-secondary">Annuller</a>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(navigationMessage))
 {
-    public class CombinationCreate
+    <div class="alert alert-success">
+        @navigationMessage <a href="/combinations">Tilbage til liste</a>
+    </div>
+}
+
+@code {
+    private Combination combination = new Combination
+        {
+            AssociatedCartridge = new Cartridge { AssociatedBullet = new Bullet() },
+            AssociatedFirearm = new Firearm(),
+            LegalityRequirements = new GameRequirements { AmmoRequirements = new AmmunitionRequirements() }
+        };
+
+    private List<Firearm> firearms = new List<Firearm>();
+    private List<Cartridge> cartridges = new List<Cartridge>();
+    private int selectedFirearmId;
+    private int selectedCartridgeId;
+    private string navigationMessage;
+
+    protected override async Task OnInitializedAsync()
     {
+        firearms = await FirearmService.GetFirearms();
+        cartridges = await CartridgeService.GetCartridges();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var selectedCartridge = cartridges.FirstOrDefault(c => c.Id == selectedCartridgeId);
+        var selectedFirearm = firearms.FirstOrDefault(f => f.Id == selectedFirearmId);
+
+        if (selectedCartridge != null && selectedFirearm != null)
+        {
+            combination.AssociatedCartridge = selectedCartridge;
+            combination.AssociatedFirearm = selectedFirearm;
+            combination.GameClass = combination.CalculateHighestLegalGameClass();
+            await CombinationService.CreateCombination(combination);
+            navigationMessage = "Kombination oprettet succesfuldt! Klik her for at gå tilbage til listen.";
+        }
+        else
+        {
+            navigationMessage = "Fejl: Vælg venligst gyldig ammunition og våben.";
+        }
     }
 }

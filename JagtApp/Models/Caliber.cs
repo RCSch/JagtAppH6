@@ -9,10 +9,10 @@ namespace JagtApp.Models
 
         [Required(ErrorMessage = "Kalibernavn er påkrævet.")]
         [StringLength(50, ErrorMessage = "Kaliber navnet kan højst være 50 tegn.")]
-        public string CaliberName { get; set; } // F.eks. "7x64 Brenneke"
+        public string CaliberName { get; set; }
 
         [Range(0.1, 25.0, ErrorMessage = "Diameteren af kaliberen skal være mellem 0,1 og 25 millimeter.")]
-        public double CaliberDiameter { get; set; } // Denne variabel skal bruges til at sikre, at man kun kan vælge kugler (bullets) med den korrekte bredde.
+        public double CaliberDiameter { get; set; }
 
         public Caliber() { }
 

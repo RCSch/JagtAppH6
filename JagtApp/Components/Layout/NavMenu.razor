@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">JagtApp</a>
+        <a class="navbar-brand" href="/">JagtApp</a>
     </div>
 </div>
 
@@ -15,11 +15,11 @@
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
                         <span class="bi bi-house-door-fill" aria-hidden="true"></span> Hjem
                     </NavLink>
                 </div>
-                
+
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="/firearms">
                         <span class="bi bi-gun" aria-hidden="true"></span> Mine Våben
@@ -31,6 +31,11 @@
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/combinations">
+                        <span class="bi bi-boxes" aria-hidden="true"></span> Mine Kombinationer
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
                     <NavLink class="nav-link" href="/gameanimals-in-season-today" Match="NavLinkMatch.All">
                         <span class="bi bi-calendar-check" aria-hidden="true"></span> Vildtarter i sæson
                     </NavLink>
@@ -39,7 +44,7 @@
                     <NavLink class="nav-link" href="/gameanimals">
                         <span class="bi bi-list" aria-hidden="true"></span> Jagtsæsonoversigt
                     </NavLink>
-                </div>              
+                </div>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
                         <span class="bi bi-person-fill" aria-hidden="true"></span> @context.User.Identity?.Name
@@ -57,7 +62,7 @@
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
                         <span class="bi bi-house-door-fill" aria-hidden="true"></span> Hjem
                     </NavLink>
                 </div>

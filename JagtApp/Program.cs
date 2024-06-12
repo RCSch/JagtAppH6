@@ -25,31 +25,36 @@ builder.Services.AddScoped<FirearmService>();
 builder.Services.AddScoped<BulletService>();
 builder.Services.AddScoped<CartridgeService>();
 builder.Services.AddScoped<CaliberService>();
+builder.Services.AddScoped<CombinationService>();
 
 // Add HttpClient with hardcoded BaseAddress
 builder.Services.AddHttpClient<GameAnimalService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 builder.Services.AddHttpClient<UserAmmunitionService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 builder.Services.AddHttpClient<FirearmService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 builder.Services.AddHttpClient<BulletService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 builder.Services.AddHttpClient<CaliberService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 builder.Services.AddHttpClient<CartridgeService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7208");
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
+});
+builder.Services.AddHttpClient<CombinationService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiBaseAddress"]);
 });
 
 // Add the following lines to register the controllers

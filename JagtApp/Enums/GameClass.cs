@@ -6,6 +6,7 @@
         Klasse2, // Råvildt, Spættet sæl
         Klasse3, // Ræv, Vaskebjørn, Mårhund, Hare, Sumpbæver, Skarv, Gæs
         Klasse4, // Husmår, Ilder, Mink, Vildkanin, Bisamrotte, Hønsefugle, Blishøne, Ænder, Måger
-        Klasse5  // Duer, Kragefugle, Vadefugle, Stær
+        Klasse5, // Duer, Kragefugle, Vadefugle, Stær
+        Ulovlig  // Hvis kombinationen ikke er lovlig for nogen klasser
     }
 }
