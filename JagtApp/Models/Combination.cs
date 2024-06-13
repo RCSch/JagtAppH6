@@ -32,11 +32,11 @@ public class Combination
 
     private double CalculateV100(double v0, Bullet bullet)
     {
-        double dragCoefficient = 0.3;
-        double densityAir = 1.225;
-        double bulletWeight = bullet.BulletWeight;
-        double bc = bullet.BallisticCoefficient;
-        double distance = 100;
+        double dragCoefficient = 0.3; // Typisk værdi for mange kugletyper.
+        double densityAir = 1.225; // Luftdensitet ved havniveau i kg/m^3
+        double bulletWeight = bullet.BulletWeight; // Kuglevægt i gram
+        double bc = bullet.BallisticCoefficient; // Ballistisk koefficient
+        double distance = 100; // Afstand i meter
 
         double v100 = Math.Sqrt(v0 * v0 - (2 * dragCoefficient * bulletWeight * densityAir * distance)) /
                       (1 + (0.5 * dragCoefficient * bulletWeight * densityAir * distance) / (bc * v0));
@@ -44,10 +44,11 @@ public class Combination
         return v100;
     }
 
+
     private double CalculateE0(double v0, Bullet bullet)
     {
-        double bulletWeight = bullet.BulletWeight / 1000;
-        return v0 * v0 * bulletWeight / 2;
+        double bulletWeight = bullet.BulletWeight / 1000; // Vi dividerer for at få vægten i gram i stedet for kg - ellers får vi resultatet i kilojoule.
+        return v0 * v0 * bulletWeight / 2; //Hastighed (i meter/sekundet) opløftet i anden potens gange kuglevægt i gram divideret med to giver anslagsenergien i joule.
     }
 
     private double CalculateE100(double v100, Bullet bullet)

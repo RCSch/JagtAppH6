@@ -18,7 +18,7 @@ else
         @foreach (var gameAnimal in gameAnimals)
         {
             <li>
-                @gameAnimal.GameName (Class: @gameAnimal.GameClass)
+                @gameAnimal.GameName, @gameAnimal.GameClass
                 @if (gameAnimal.HuntingSeasons.Any())
                 {
                     <ul>

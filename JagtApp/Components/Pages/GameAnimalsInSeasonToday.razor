@@ -18,7 +18,7 @@ else
     <ul>
         @foreach (var gameAnimal in gameAnimalsInSeasonToday)
         {
-            <li>@gameAnimal.GameName (Klasse: @gameAnimal.GameClass)</li>
+            <li>@gameAnimal.GameName, @gameAnimal.GameClass</li>
         }
     </ul>
 }

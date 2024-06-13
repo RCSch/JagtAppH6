@@ -13,7 +13,14 @@
             </div>
         </Authorized>
         <NotAuthorized>
-            <p>Du er ikke logget ind.</p>
+            <div class="page">
+                <div class="sidebar">
+                    <NavMenu />
+                </div>
+                <div class="main">
+                    @Body
+                </div>
+            </div>
         </NotAuthorized>
     </AuthorizeView>
 </CascadingAuthenticationState>
